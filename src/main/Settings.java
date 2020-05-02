@@ -115,7 +115,6 @@ public class Settings {
 		try (PrintWriter pw = new PrintWriter("./settings.ini")) {
 			pw.println("// ==== Settings ====");
 			pw.println();
-			pw.println("// Keyboard Shortcuts");
 			pw.println("// Possible keys: A-Z, ALT, CTRL or CMD (latter untested), SHIFT, F1-F24, NUM_0-NUM_9");
 			pw.println("// press shortly taps the shortcut, while toggle holds it until invoked again.");
 			pw.println("// \"None\" indicates an empty shortcut");
@@ -136,15 +135,18 @@ public class Settings {
 			pw.println("TOPLEFT: toggle SHIFT");
 			pw.println("TOPRIGHT: press F3");
 			pw.println();
-			pw.println("// Colors in R, G, B");
+			pw.println("// Colors in R, G, B:");
+			pw.println("// The filled circle");
 			pw.println("BG: 238, 238, 238");
+			pw.println("// The rim that shows when a tap is held");
 			pw.println("RIM: 0, 0, 0");
+			pw.println("// The markings on the circle");
 			pw.println("DETAILS: 0, 0, 0");
 			pw.println();
-			pw.println("// Window position in x, y");
+			pw.println("// Window position in x, y:");
 			pw.println("POS: 200, 55");
 			pw.println();
-			pw.println("// Window size");
+			pw.println("// Window size:");
 			pw.println("SIZE: 200");
 
 		} catch (IOException e) {
@@ -156,10 +158,10 @@ public class Settings {
 	}
 
 	private static int[] parseNums(String instr) {
-		String[] parts = instr.split(",");
-		int[] res = new int[parts.length];
-
+		int[] res;
 		try {
+			String[] parts = instr.split(",");
+			res = new int[parts.length];
 
 			for (int i = 0; i < res.length; i++) {
 				res[i] = Integer.parseInt(parts[i].trim());
