@@ -7,10 +7,10 @@ public class Shortcut {
 
 	public boolean isHeld = false;
 
-	public Shortcut(String t, String k) {
-		this.keys = k.split("\\+");
+	public Shortcut(String mod, String keyRaw) {
+		this.keys = keyRaw.split("\\+");
 
-		switch (t) {
+		switch (mod) {
 		case "press":
 			mode = Shortcuts.PRESS;
 			break;
@@ -18,12 +18,12 @@ public class Shortcut {
 			mode = Shortcuts.TOGGLE;
 			break;
 		default: 
-			keys[0] = "NULL";
+			keys[0] = "None";
 			break;
 		}
 	}
 	
-	public boolean isSet() {
+	public boolean isDef() {
 		return !(keys[0].equals("None"));
 	}
 
