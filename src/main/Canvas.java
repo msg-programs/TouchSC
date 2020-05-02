@@ -196,9 +196,9 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
 			}
 
 			if (last != -1 && pass[0] && pass[1] && pass[2] && pass[3]) {
+				Shortcuts.unpressAll();
 				System.exit(0);
 			}
-
 		}
 		repaint();
 	}
