@@ -9,85 +9,104 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Settings {
 
-	public static Color bg;
-	public static Color rim;
-	public static Color detail;
+	public static Color bg = new Color(238,238,238);
+	public static Color rim = new Color(0,0,0);
+	public static Color detail = new Color(0,0,0);;
 
-	public static Point pos;
-	public static int size;
+	public static Point pos = new Point(100,100);
+	public static int size = 200;
 
 	public static void init() {
+		ArrayList<String> lines = new ArrayList<>();
+
 		try (BufferedReader br = new BufferedReader(new FileReader("./settings.ini"))) {
-			ArrayList<String> lines = new ArrayList<>();
 
 			String line;
 			while ((line = br.readLine()) != null) {
-				
+
 				lines.add(line);
-			}
-
-			lines.removeIf(s -> s.length() <= 1);
-			lines.removeIf(s -> s.startsWith("//"));
-
-			for (String s : lines) {
-				if (s.contains("POS:")) {
-					int[] nums = parseNums(s, 2);
-					if (nums == null)
-						continue;
-					pos = new Point(nums[0], nums[1]);
-					continue;
-				}
-				if (s.contains("SIZE: ")) {
-					int[] nums = parseNums(s, 1);
-					if (nums == null)
-						continue;
-					size = nums[0];
-					continue;
-				}
-				if (s.contains("BG:")) {
-					int[] nums = parseNums(s, 3);
-					if (nums == null)
-						continue;
-					bg = new Color(nums[0], nums[1], nums[2]);
-					continue;
-				} 
-				if (s.contains("RIM:")) {
-					int[] nums = parseNums(s, 3);
-					if (nums == null)
-						continue;
-					rim = new Color(nums[0], nums[1], nums[2]);
-					continue;
-				}
-				if (s.contains("DETAILS:")) {
-					int[] nums = parseNums(s, 3);
-					if (nums == null)
-						continue;
-					detail = new Color(nums[0], nums[1], nums[2]);
-					continue;
-				}
-
-				if (s.contains("->")) {
-					String[] parts = s.split(":");
-					Shortcuts.setSC(parts[1], parts[0].split("->"));
-					continue;
-				}
-				
-				if (s.contains("None")) {
-					s+=" a "; // ugly hack
-				}
-					
-				Shortcuts.setTSC(s.split(": ")[0], s.split(": ")[1]);
 			}
 
 		} catch (FileNotFoundException fnfe) {
 			createNewInitFile();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+		}
+
+		lines.removeIf(s -> s.length() <= 1);
+		lines.removeIf(s -> s.startsWith("//"));
+
+		HashMap<String, String> settingMap = new HashMap<>();
+
+		for (String s : lines) {
+			String[] pair = s.split(":");
+
+			// s = keystr: value
+			// ___ |_[0]|__|[1]|
+			settingMap.put(pair[0].trim(), pair[1].trim());
+		}
+
+		lines.clear();
+
+		int[] nums = null;
+
+		nums = parseNums(settingMap.get("POS"));
+		if (nums != null) {
+			pos = new Point(nums[0], nums[1]);
+		}
+		settingMap.remove("POS");
+
+		nums = parseNums(settingMap.get("SIZE"));
+		if (nums != null) {
+			size = nums[0];
+		}
+		settingMap.remove("SIZE");
+
+		nums = parseNums(settingMap.get("BG"));
+		if (nums != null) {
+			bg = new Color(nums[0], nums[1], nums[2]);
+		}
+		settingMap.remove("BG");
+
+		nums = parseNums(settingMap.get("RIM"));
+		if (nums != null) {
+			rim = new Color(nums[0], nums[1], nums[2]);
+		}
+		settingMap.remove("RIM");
+
+		nums = parseNums(settingMap.get("DETAILS"));
+		if (nums != null) {
+			detail = new Color(nums[0], nums[1], nums[2]);
+		}	
+		settingMap.remove("DETAILS");
+
+		String cmd = settingMap.get("BOTLEFT");
+		Shortcuts.setTSC(Shortcuts.BOTLEFT, cmd);
+		settingMap.remove("BOTLEFT");
+
+		cmd = settingMap.get("BOTRIGHT");
+		Shortcuts.setTSC(Shortcuts.BOTRIGHT, cmd);
+		settingMap.remove("BOTRIGHT");
+
+		cmd = settingMap.get("TOPLEFT");
+		Shortcuts.setTSC(Shortcuts.TOPLEFT, cmd);
+		settingMap.remove("TOPLEFT");
+
+		cmd = settingMap.get("TOPRIGHT");
+		Shortcuts.setTSC(Shortcuts.TOPRIGHT, cmd);
+		settingMap.remove("TOPRIGHT");
+
+		for (String key : settingMap.keySet()) {
+			if (key.contains("->")) {
+
+				// [settingMap] = where -> where: mode keys
+				// _______________|_____key____|__|__val__|
+				Shortcuts.setSC(key, settingMap.get(key));
+			}
 		}
 
 	}
@@ -128,7 +147,7 @@ public class Settings {
 			pw.println("// Window size");
 			pw.println("SIZE: 200");
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			return;
 		}
@@ -136,20 +155,20 @@ public class Settings {
 
 	}
 
-	private static int[] parseNums(String s, int i) {
-		int[] res = new int[i];
+	private static int[] parseNums(String instr) {
+		String[] parts = instr.split(",");
+		int[] res = new int[parts.length];
+
 		try {
 
-			String nums = s.split(": ")[1];
-			String[] parts = nums.split(",");
-
-			for (int j = 0; j < i; j++) {
-				res[j] = Integer.parseInt(parts[j].trim());
+			for (int i = 0; i < res.length; i++) {
+				res[i] = Integer.parseInt(parts[i].trim());
 			}
 
 		} catch (Exception e) {
 			return null;
 		}
+
 		return res;
 	}
 }

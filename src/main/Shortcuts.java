@@ -5,6 +5,7 @@ import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class Shortcuts {
 
@@ -23,25 +24,10 @@ public class Shortcuts {
 
 	public static final int PRESS = 0;
 	public static final int TOGGLE = 1;
-	public static final int STICKY = 2;
 
 	public static HashMap<String, Integer> keys = new HashMap<>();
 
 	public static void init() {
-
-//		sc[UP][LEFT] = new Shortcut("press", "B"); // brush
-//		sc[UP][RIGHT] = new Shortcut("press", "E"); // eraser
-//		sc[DOWN][LEFT] = new Shortcut("press", "ALT+TAB"); // alt tab
-//		sc[DOWN][RIGHT] = new Shortcut("press", "CTRL+D"); // deselect
-//		sc[LEFT][UP] = new Shortcut("press", "V"); // select lasso
-//		sc[LEFT][DOWN] = new Shortcut("press", "L"); // move
-//		sc[RIGHT][UP] = new Shortcut("press", "G"); // color pick
-//		sc[RIGHT][DOWN] = new Shortcut("press", "I"); // bucket
-//
-//		tsc[BOTLEFT] = new Shortcut("toggle", "CTRL");
-//		tsc[BOTRIGHT] = new Shortcut("toggle", "ALT");
-//		tsc[TOPLEFT] = new Shortcut("toggle", "SHIFT");
-//		tsc[TOPRIGHT] = new Shortcut("press", "F3");
 
 		for (int i = 65; i <= 90; i++) {
 			keys.put(((char) i) + "", i);
@@ -82,7 +68,7 @@ public class Shortcuts {
 	public static void doTSC(int idx) {
 		Shortcut cut = tsc[idx];
 
-		System.out.println("Pressing " + Arrays.toString(cut.keys));
+		System.out.println("Pressing " + String.join(" + ", cut.keys));
 
 		if (!cut.isDef()) {
 			return;
@@ -107,13 +93,13 @@ public class Shortcuts {
 			Robot r = new Robot();
 
 			if (cut.isHeld) {
-				System.out.println("Toggeling off " + Arrays.toString(cut.keys));
+				System.out.println("Toggeling off " + String.join(" + ", cut.keys));
 				for (String s : cut.keys) {
 					cut.isHeld = false;
 					r.keyRelease(keys.get(s));
 				}
 			} else {
-				System.out.println("Toggeling on " + Arrays.toString(cut.keys));
+				System.out.println("Toggeling on " + String.join(" + ", cut.keys));
 				for (String s : cut.keys) {
 					cut.isHeld = true;
 					r.keyPress(keys.get(s));
@@ -128,11 +114,12 @@ public class Shortcuts {
 
 	private static void pressSC(Shortcut cut) {
 		try {
-			System.out.println("Pressing " + Arrays.toString(cut.keys));
+			System.out.println("Pressing " + String.join(" + ", cut.keys));
 			Robot r = new Robot();
 
-			for (String s : cut.keys)
+			for (String s : cut.keys) {
 				r.keyPress(keys.get(s));
+			}
 
 			Thread.sleep(10);
 
@@ -143,8 +130,13 @@ public class Shortcuts {
 		}
 	}
 
-	public static void setSC(String cmd, String... parts) {
+	public static void setSC(String where, String cmd) {
 		int first = -1, second = -1;
+		
+		// [where] = first -> second
+		//  _________|[0]|____|_[1]|
+		String[] parts = where.split("->");
+		
 		switch (parts[0].trim()) {
 		case "UP":
 			first = Shortcuts.UP;
@@ -174,27 +166,26 @@ public class Shortcuts {
 			second = Shortcuts.RIGHT;
 			break;
 		}
-		String[] keys = cmd.trim().split(" ");
-		sc[first][second] = new Shortcut(keys[0], keys[1]);
+		
+		sc[first][second] = new Shortcut(cmd);
 	}
 
-	public static void setTSC(String what, String s) {
-		String[] keys = s.split(" ");
-		switch (what) {
-		case "TOPRIGHT":
-			tsc[TOPRIGHT] = new Shortcut(keys[0], keys[1]);
-			break;
-		case "TOPLEFT":
-			tsc[TOPLEFT] = new Shortcut(keys[0], keys[1]);
-			break;
-		case "BOTRIGHT":
-			tsc[BOTRIGHT] = new Shortcut(keys[0], keys[1]);
-			break;
-		case "BOTLEFT":
-			tsc[BOTLEFT] = new Shortcut(keys[0], keys[1]);
-			break;
-		}
+	public static void setTSC(int where, String cmd) {
+		tsc[where] = new Shortcut(cmd);
+	}
 
+	public static void unpressAll() {
+		for (int i = 0; i<4; i++) {
+			for (int j = 0; j<4; j++) {
+				if (sc[i][j] != null && sc[i][j].isHeld) {
+					doSC(i,j);
+				}
+			}
+			if (tsc[i] != null && tsc[i].isHeld) {
+				doTSC(i);
+			}
+		}
+		
 	}
 
 }
