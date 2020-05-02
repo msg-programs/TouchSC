@@ -1,6 +1,6 @@
+// File is part of TouchSC (c) 2020 msg-programs, see LICENSE
+
 package main;
-
-
 
 import java.awt.Color;
 
@@ -9,11 +9,8 @@ import javax.swing.JFrame;
 public class ShortcutMain {
 
 	public static void main(String[] args) {
-		try {
-			Settings.init();
-		} catch (Exception e) {
-			// TODO handle
-		}
+
+		Settings.init();
 		Shortcuts.init();
 
 		JFrame frame = new JFrame();
@@ -33,5 +30,5 @@ public class ShortcutMain {
 		frame.setVisible(true);
 
 	}
-	
+
 }
