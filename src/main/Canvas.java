@@ -36,7 +36,6 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
 		this.setOpaque(false);
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-		System.out.printf("%s, %s, %s\n", this.getBackground().getRed() ,this.getBackground().getGreen() ,this.getBackground().getBlue() );
 	}
 
 	@Override
@@ -78,7 +77,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
 		p.addPoint(w / 2 + 10, h / 2);
 		g2d.fillPolygon(p);
 
-		g2d.setStroke(new BasicStroke(2));
+		g2d.setStroke(new BasicStroke(1f));
 		
 		for (int i = 0; i < pts.size() - 1; i++) {
 			Point f = pts.get(i);
@@ -87,18 +86,18 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
 		}
 
 		g2d.setColor(Settings.rim);
-		g2d.setStroke(new BasicStroke(4));
+		g2d.setStroke(new BasicStroke(2));
 		if (Shortcuts.tsc[Shortcuts.TOPLEFT].isHeld)
-			g2d.draw(new Arc2D.Double(0, 0, w - 1, h - 1, 90, 90, Arc2D.OPEN));
+			g2d.draw(new Arc2D.Double(1, 1, w - 3, h - 3, 90, 90, Arc2D.OPEN));
 
 		if (Shortcuts.tsc[Shortcuts.TOPRIGHT].isHeld)
-			g2d.draw(new Arc2D.Double(0, 0, w - 1, h - 1, 0, 90, Arc2D.OPEN));
+			g2d.draw(new Arc2D.Double(1, 1, w - 3, h - 3, 0, 90, Arc2D.OPEN));
 
 		if (Shortcuts.tsc[Shortcuts.BOTLEFT].isHeld)
-			g2d.draw(new Arc2D.Double(0, 0, w - 1, h - 1, 180, 90, Arc2D.OPEN));
+			g2d.draw(new Arc2D.Double(1, 1, w - 3, h - 3, 180, 90, Arc2D.OPEN));
 
 		if (Shortcuts.tsc[Shortcuts.BOTRIGHT].isHeld)
-			g2d.draw(new Arc2D.Double(0, 0, w - 1, h - 1, 270, 90, Arc2D.OPEN));
+			g2d.draw(new Arc2D.Double(1, 1, w - 3, h - 3, 270, 90, Arc2D.OPEN));
 
 	}
 
