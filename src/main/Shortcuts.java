@@ -68,7 +68,6 @@ public class Shortcuts {
 	public static void doTSC(int idx) {
 		Shortcut cut = tsc[idx];
 
-		System.out.println("Pressing " + String.join(" + ", cut.keys));
 
 		if (!cut.isDef()) {
 			return;
