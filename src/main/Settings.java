@@ -11,6 +11,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
 public class Settings {
 
 	public static Color bg = new Color(238,238,238);
@@ -33,6 +35,7 @@ public class Settings {
 
 		} catch (FileNotFoundException fnfe) {
 			createNewInitFile();
+			System.exit(0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -43,11 +46,17 @@ public class Settings {
 		HashMap<String, String> settingMap = new HashMap<>();
 
 		for (String s : lines) {
+			s = s.replace("+ ", "+").replace(" +", "+");
+			System.out.println(s);
 			String[] pair = s.split(":");
 
 			// s = keystr: value
 			// ___ |_[0]|__|[1]|
-			settingMap.put(pair[0].trim(), pair[1].trim());
+			try {
+				settingMap.put(pair[0].trim(), pair[1].trim());
+			} catch (ArrayIndexOutOfBoundsException e) {
+				System.err.println("Invalid line: \"" + s + "\"");
+			}
 		}
 
 		lines.clear();
@@ -122,8 +131,8 @@ public class Settings {
 			pw.println("// Gestures: (swipe 1 -> 2)");
 			pw.println("UP -> LEFT: press B");
 			pw.println("UP -> RIGHT: press E");
-			pw.println("DOWN -> LEFT: press ALT+TAB");
-			pw.println("DOWN -> RIGHT: press CTRL+D");
+			pw.println("DOWN -> LEFT: press ALT + TAB");
+			pw.println("DOWN -> RIGHT: press CTRL + D");
 			pw.println("LEFT -> UP: press V");
 			pw.println("LEFT -> DOWN: press L");
 			pw.println("RIGHT -> UP: press G");
@@ -153,7 +162,7 @@ public class Settings {
 			e.printStackTrace();
 			return;
 		}
-		init();
+		JOptionPane.showMessageDialog(null, "No settings.ini found, creating new one.\nPlease adjust the settings and restart the program.", "Info", JOptionPane.INFORMATION_MESSAGE);
 
 	}
 
