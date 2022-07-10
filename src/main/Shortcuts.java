@@ -1,3 +1,4 @@
+// File is part of TouchSC (c) 2020 msg-programs, see LICENSE
 package main;
 
 import java.awt.Robot;

@@ -1,3 +1,4 @@
+// File is part of TouchSC (c) 2020 msg-programs, see LICENSE
 package main;
 
 import java.awt.Color;
@@ -24,6 +25,7 @@ public class Settings {
 
 			String line;
 			while ((line = br.readLine()) != null) {
+				
 				lines.add(line);
 			}
 
@@ -72,7 +74,11 @@ public class Settings {
 					Shortcuts.setSC(parts[1], parts[0].split("->"));
 					continue;
 				}
-
+				
+				if (s.contains("None")) {
+					s+=" a "; // ugly hack
+				}
+					
 				Shortcuts.setTSC(s.split(": ")[0], s.split(": ")[1]);
 			}
 

@@ -1,5 +1,7 @@
+// File is part of TouchSC (c) 2020 msg-programs, see LICENSE
 package main;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -76,6 +78,8 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
 		p.addPoint(w / 2 + 10, h / 2);
 		g2d.fillPolygon(p);
 
+		g2d.setStroke(new BasicStroke(2));
+		
 		for (int i = 0; i < pts.size() - 1; i++) {
 			Point f = pts.get(i);
 			Point s = pts.get(i + 1);
@@ -83,7 +87,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
 		}
 
 		g2d.setColor(Settings.rim);
-		
+		g2d.setStroke(new BasicStroke(4));
 		if (Shortcuts.tsc[Shortcuts.TOPLEFT].isHeld)
 			g2d.draw(new Arc2D.Double(0, 0, w - 1, h - 1, 90, 90, Arc2D.OPEN));
 
@@ -156,7 +160,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
 			Shortcuts.doSC(first, second);
 			repaint();
 		} catch (Exception ex) {
-//			ex.printStackTrace();
+			// drop it
 		}
 
 	}
@@ -167,10 +171,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
 		pts.add(e.getPoint());
 
 		if (count == DELTA) {
-//			System.out.println("point");
-
 			d = e.getPoint();
-//			System.out.println(d.x + " " + d.y);
 		}
 
 		if (count > DELTA) {
@@ -181,20 +182,16 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
 			int y = e.getY();
 
 			if (x < w / 2 && x >= 0 && y < h / 2 && y >= 0 && (last == 3 || last == -1)) {
-//				System.out.println("0");
 				last = 0;
 				pass[last] = true;
 			} else if (x >= w / 2 && x <= w && y < h / 2 && y >= 0 && (last == 0 || last == -1)) {
 				last = 1;
-//				System.out.println("1");
 				pass[last] = true;
 			} else if (x < w / 2 && x >= 0 && y >= h / 2 && y <= h && (last == 1 || last == -1)) {
 				last = 2;
-//				System.out.println("2");
 				pass[last] = true;
 			} else if (x >= w / 2 && x <= w && y >= h / 2 && y <= h && (last == 2 || last == -1)) {
 				last = 3;
-//				System.out.println("3");
 				pass[last] = true;
 			}
 
