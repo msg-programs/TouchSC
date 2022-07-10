@@ -31,50 +31,59 @@ public class Settings {
 			lines.removeIf(s -> s.startsWith("//"));
 
 			for (String s : lines) {
-				if (s.contains("POS:")) {
-					int[] nums = parseNums(s, 2);
+				int[] nums = parseNums(s, 2);
 					if (nums == null)
 						continue;
 					pos = new Point(nums[0], nums[1]);
+					continue;
 				}
 				if (s.contains("SIZE: ")) {
 					int[] nums = parseNums(s, 1);
 					if (nums == null)
 						continue;
 					size = nums[0];
+					continue;
 				}
 				if (s.contains("BG:")) {
 					int[] nums = parseNums(s, 3);
 					if (nums == null)
 						continue;
-					bg = new Color(nums[0], nums[1],nums[2]);
-				}
+					bg = new Color(nums[0], nums[1], nums[2]);
+					continue;
+				} 
 				if (s.contains("RIM:")) {
 					int[] nums = parseNums(s, 3);
 					if (nums == null)
 						continue;
-					rim = new Color(nums[0], nums[1],nums[2]);
+					rim = new Color(nums[0], nums[1], nums[2]);
+					continue;
 				}
 				if (s.contains("DETAILS:")) {
 					int[] nums = parseNums(s, 3);
 					if (nums == null)
 						continue;
-					detail = new Color(nums[0], nums[1],nums[2]);
+					detail = new Color(nums[0], nums[1], nums[2]);
+					continue;
 				}
-				
+
 				if (s.contains("->")) {
-					
+					String[] parts = s.split(":");
+					Shortcuts.setSC(parts[1], parts[0].split("->"));
+					continue;
 				}
+
+				Shortcuts.setTSC(s.split(": ")[0], s.split(": ")[1]);
 			}
 
 		} catch (FileNotFoundException fnfe) {
 			createNewInitFile();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
-
 
 	private static void createNewInitFile() {
 		try (PrintWriter pw = new PrintWriter("./settings.ini")) {
@@ -99,7 +108,7 @@ public class Settings {
 			pw.println("BOTLEFT: toggle CTRL");
 			pw.println("BOTRIGHT: toggle ALT");
 			pw.println("TOPLEFT: toggle SHIFT");
-			pw.println("TOPRIGHT: F3");
+			pw.println("TOPRIGHT: press F3");
 			pw.println();
 			pw.println("// Colors in R, G, B");
 			pw.println("BG: 238, 238, 238");
@@ -114,21 +123,23 @@ public class Settings {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			return;
 		}
+		init();
 
 	}
 
 	private static int[] parseNums(String s, int i) {
 		int[] res = new int[i];
 		try {
-			
+
 			String nums = s.split(": ")[1];
 			String[] parts = nums.split(",");
-			
+
 			for (int j = 0; j < i; j++) {
 				res[j] = Integer.parseInt(parts[j].trim());
 			}
-			
+
 		} catch (Exception e) {
 			return null;
 		}

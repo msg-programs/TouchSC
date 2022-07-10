@@ -1,3 +1,7 @@
+package main;
+
+
+
 import java.awt.Color;
 
 import javax.swing.JFrame;
@@ -5,8 +9,11 @@ import javax.swing.JFrame;
 public class ShortcutMain {
 
 	public static void main(String[] args) {
-		
-		Settings.init();
+		try {
+			Settings.init();
+		} catch (Exception e) {
+			// TODO handle
+		}
 		Shortcuts.init();
 
 		JFrame frame = new JFrame();
