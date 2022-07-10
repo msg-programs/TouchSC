@@ -31,7 +31,8 @@ public class Settings {
 			lines.removeIf(s -> s.startsWith("//"));
 
 			for (String s : lines) {
-				int[] nums = parseNums(s, 2);
+				if (s.contains("POS:")) {
+					int[] nums = parseNums(s, 2);
 					if (nums == null)
 						continue;
 					pos = new Point(nums[0], nums[1]);
