@@ -11,6 +11,7 @@ public class ShortcutMain {
 	public static void main(String[] args) {
 
 		Settings.init();
+
 		Shortcuts.init();
 
 		JFrame frame = new JFrame();
